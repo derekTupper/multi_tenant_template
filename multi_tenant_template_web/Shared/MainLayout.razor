@@ -1,0 +1,58 @@
+﻿@inherits LayoutComponentBase
+@inject IAuthenticationService AuthenticationService
+
+ 
+
+<MudThemeProvider Theme="HealthTheme"/>
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<AuthorizeView>
+    <Authorized>
+        <MudLayout>
+            <MudAppBar Elevation="0">
+                @if (!_drawerOpen)
+                {
+                    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+                }
+                <MudAppBarSpacer />
+                <MudFab Icon="@Icons.Material.Filled.Notifications" Size="Size.Medium" DisableElevation="true"  />
+            </MudAppBar>
+            <MudDrawer @bind-Open="_drawerOpen" Elevation="1"  Variant="@DrawerVariant.Responsive">
+                <MudDrawerHeader Class="d-flex justify-end">
+                    <MudIconButton Icon="@Icons.Material.Filled.MenuOpen" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+                </MudDrawerHeader>
+                <MudNavMenu Style="padding-top:30px">
+                    <MudNavGroup Title="Patients" Icon="@Icons.Filled.Person">
+                        <MudNavLink Href="/SearchPatient" Icon="@Icons.Outlined.Search" Color="">Search Patient</MudNavLink>
+                        <MudNavLink Href="/CreatePatient" Icon="@Icons.Outlined.Add">Create Patient</MudNavLink>
+                    </MudNavGroup>
+                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Filled.Groups">Users</MudNavLink>
+                </MudNavMenu>
+                <MudButton Class="d-flex justify-bottom" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Logout" Size="Size.Large" Color="Color.Primary" OnClick="Logout" >Logout</MudButton>
+            </MudDrawer>
+            <MudMainContent Class="pt-12 px-12">
+               @Body
+            </MudMainContent>
+        </MudLayout>
+    </Authorized>
+    <NotAuthorized>
+        @Body
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+    bool _drawerOpen = true;
+    HealthAppTheme HealthTheme = new HealthAppTheme();
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    void Logout()
+    {
+        AuthenticationService.Logout();
+    }
+}

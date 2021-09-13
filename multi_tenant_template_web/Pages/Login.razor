@@ -1,0 +1,43 @@
+﻿@page "/login"
+@using System.ComponentModel.DataAnnotations
+@inject ISecurityService _securityService
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
+
+<div style="width:800px; position:fixed; top:45%; left:50%; margin-left:-300px; margin-top:-300px">
+    <MudCard>
+        <MudCardContent>
+            <image Path=@LoginSettings.Logo Style="width:600px; padding-bottom:60px; padding-top:30px; margin-left:100px"></image>
+            <MudForm>
+                <MudTextField T="string" Label="Username" Required="true" RequiredError="Username is required!" @bind-Value="model.Username" />
+                <MudTextField T="string" Label="Password" Required="true" InputType="InputType.Password" RequiredError="Password is required"  @bind-Value="model.Password"/>
+            </MudForm>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Color="Color.Primary" OnClick="@(() => OnLogin(model))" Class="ml-auto">Login</MudButton>
+        </MudCardActions>
+        <MudPaper>
+            <MudLink Path="@LoginSettings.PrivacyPolicy" Text="Privacy Policy" ></MudLink>
+        </MudPaper>
+    </MudCard>
+</div>
+
+@code {
+    IdentifyResult LoginSettings = new IdentifyResult();
+    private LoginUser model = new LoginUser();
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoginSettings = await _securityService.Identify();
+
+        if (!LoginSettings.TenantFound)
+        {
+            NavigationManager.NavigateTo("/Invalid");
+        }
+    }
+
+    void OnLogin(LoginUser model)
+    {
+        AuthenticationService.Login(model.Username,model.Password);
+    }
+}
