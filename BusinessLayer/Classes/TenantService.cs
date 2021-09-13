@@ -5,20 +5,14 @@ using Common.Enums;
 using Common.Helpers;
 using Common.Models;
 using DataLayer;
-using DataLayer.Entities.Platform;
 using Finbuckle.MultiTenant;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using RestSharp;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace BusinessLayer.Classes
 {
-    public class TenantService : ITenantService
+		public class TenantService : ITenantService
     {
         private string _className = "App Service";
         private Logging _logger;
